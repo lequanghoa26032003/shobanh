@@ -1,0 +1,377 @@
+<?php
+$filepath = realpath(dirname(__FILE__));
+include_once ($filepath . '/../lib/database.php');
+include_once ($filepath . '/../helpers/format.php');
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+	if (isset($_SESSION['auth'])) {
+		if (isset($_POST['scope'])) {
+			$scope = $_POST['scope'];
+
+			switch ($scope) {
+				case "delete":
+					$user_id = $_SESSION['id'];
+
+					$id = $_POST['id'];
+
+					$check_query = "SELECT * FROM tbl_wishlist WHERE id='$id' AND customer_id='$user_id'  ";
+					$check_result = mysqli_query($con, $check_query);
+
+					if (mysqli_num_rows($check_result) > 0) {
+						$delete_query = "DELETE FROM tbl_wishlist  WHERE id='$id' ";
+						$delete_result = mysqli_query($con, $delete_query);
+						if ($delete_result) {
+							echo 200;
+						} else {
+							echo 500;
+						}
+					}
+					break;
+
+				default:
+					echo 500;
+			}
+		}
+	} else {
+		echo 401;
+
+	}
+}
+// if(isset($_POST['index'])){
+// 	$
+// }
+?>
+
+
+<?php
+/**
+ * 
+ */
+class product
+{
+	private $db;
+	private $fm;
+	public function __construct()
+	{
+		$this->db = new Database();
+		$this->fm = new Format();
+	}
+
+	public function insert_product($data, $files, $status, $trending)
+	{
+		$category_id = mysqli_real_escape_string($this->db->link, $data['category_id']);
+		$name = mysqli_real_escape_string($this->db->link, $data['name']);
+		$slug = mysqli_real_escape_string($this->db->link, $data['slug']);
+		$small_description = mysqli_real_escape_string($this->db->link, $data['small_description']);
+		$description = mysqli_real_escape_string($this->db->link, $data['description']);
+		$original_price = mysqli_real_escape_string($this->db->link, $data['original_price']);
+		$selling_price = mysqli_real_escape_string($this->db->link, $data['selling_price']);
+		$qty = mysqli_real_escape_string($this->db->link, $data['qty']);
+		$status = mysqli_real_escape_string($this->db->link, $status);
+		$trending = mysqli_real_escape_string($this->db->link, $trending);
+		$meta_title = mysqli_real_escape_string($this->db->link, $data['meta_title']);
+		$meta_description = mysqli_real_escape_string($this->db->link, $data['meta_description']);
+		$meta_keywords = mysqli_real_escape_string($this->db->link, $data['meta_keywords']);
+
+		$image = $_FILES['image']['name'];
+		$path = "../uploads";
+		$image_ext = pathinfo($image, PATHINFO_EXTENSION);
+		$filename = time() . "." . $image_ext;
+
+		if ($slug == '' || $name == "" || $small_description == "" || $description == "" || $original_price == "" || $selling_price == "" || $meta_title == "" || $meta_description == "" || $meta_keywords == "") {
+			$_SESSION['alert'] = 'không được để trống';
+			return false;
+		} else {
+			$query = "INSERT INTO products(category_id,name,slug,small_description,description,original_price,selling_price,image,qty,status,trending,meta_title,meta_keywords,meta_description) VALUES('$category_id','$name','$slug','$small_description','$description','$original_price','$selling_price','$filename','$qty','$status','$trending','$meta_title','$meta_keywords','$meta_description') ";
+			$result = $this->db->insert($query);
+			if ($result) {
+				move_uploaded_file($_FILES["image"]["tmp_name"], $path . '/' . $filename);
+				$_SESSION['alert'] = 'Đã được thêm thành công';
+				return true;
+			} else {
+				$_SESSION['alert'] = 'Thêm không thành công';
+				return false;
+			}
+
+		}
+	}
+
+	public function show_product()
+	{
+		$query = "SELECT * FROM products order by id desc";
+		$result = $this->db->select($query);
+		return $result;
+		// $query =
+		// 	"SELECT products.*, tb_cat.catName
+
+		// 	 FROM products INNER JOIN tb_cat ON products.id = tb_cat.id
+
+		// 	 order by products.id desc ";
+
+		// // $query = "SELECT * FROM products order by id desc ";
+		// $result = $this->db->select($query);
+		// return $result;
+	}
+	// public function update_status_slider($id, $status)
+	// {
+
+	// 	$status = mysqli_real_escape_string($this->db->link, $status);
+	// 	$query = "UPDATE tbl_slider SET status = '$status' where sliderId='$id'";
+	// 	$result = $this->db->update($query);
+	// 	return $result;
+	// }
+	// public function del_slider($id)
+	// {
+	// 	$query = "DELETE FROM tbl_slider where sliderId = '$id' ";
+	// 	$result = $this->db->delete($query);
+	// 	if ($result) {
+	// 		$alert = "<span class='success'>Slider Deleted Successfully</span>";
+	// 		return $alert;
+	// 	} else {
+	// 		$alert = "<span class='success'>Slider Deleted Not Success</span>";
+	// 		return $alert;
+	// 	}
+	// }
+	// public function update_quantity_products($data, $files, $id)
+	// {
+	// 	$products_more_quantity = mysqli_real_escape_string($this->db->link, $data['products_more_quantity']);
+	// 	$description = mysqli_real_escape_string($this->db->link, $data['description']);
+
+	// 	if ($products_more_quantity == "") {
+
+	// 		$alert = "<span class='error'>Không được để trống</span>";
+	// 		return $alert;
+	// 	} else {
+	// 		$qty_total = $products_more_quantity + $description;
+	// 		//Nếu người dùng không chọn ảnh
+	// 		$query = "UPDATE products SET
+
+	// 				description = '$qty_total'
+
+	// 				WHERE id = '$id'";
+
+	// 	}
+	// 	$query_warehouse = "INSERT INTO tbl_warehouse(id_sanpham,sl_nhap) VALUES('$id','$products_more_quantity') ";
+	// 	$result_insert = $this->db->insert($query_warehouse);
+	// 	$result = $this->db->update($query);
+
+	// 	if ($result) {
+	// 		$alert = "<span class='success'>Thêm số lượng thành công</span>";
+	// 		return $alert;
+	// 	} else {
+	// 		$alert = "<span class='error'>Thêm số lượng không thành công</span>";
+	// 		return $alert;
+	// 	}
+
+	// }
+	public function update_product($data, $files, $id, $status, $trending)
+	{
+		$category_id = mysqli_real_escape_string($this->db->link, $data['category_id']);
+		$name = mysqli_real_escape_string($this->db->link, $data['name']);
+		$slug = mysqli_real_escape_string($this->db->link, $data['slug']);
+		$small_description = mysqli_real_escape_string($this->db->link, $data['small_description']);
+		$description = mysqli_real_escape_string($this->db->link, $data['description']);
+		$original_price = mysqli_real_escape_string($this->db->link, $data['original_price']);
+		$selling_price = mysqli_real_escape_string($this->db->link, $data['selling_price']);
+		$qty = mysqli_real_escape_string($this->db->link, $data['qty']);
+		$status = mysqli_real_escape_string($this->db->link, $status);
+		$trending = mysqli_real_escape_string($this->db->link, $trending);
+		$meta_title = mysqli_real_escape_string($this->db->link, $data['meta_title']);
+		$meta_description = mysqli_real_escape_string($this->db->link, $data['meta_description']);
+		$meta_keywords = mysqli_real_escape_string($this->db->link, $data['meta_keywords']);
+
+		$new_image = $_FILES['image']['name'];
+		$old_image = $_POST['old_image'];
+		if ($category_id == "" || $slug == '' || $name == "" || $small_description == "" || $description == "" || $original_price == "" || $selling_price == "" || $meta_title == "" || $meta_description == "" || $meta_keywords == "") {
+			$_SESSION['alert'] = 'không được để trống';
+			return false;
+		} else {
+			if ($new_image != "") {
+				//$update_filename = $new_image;
+				$image_ext = pathinfo($new_image, PATHINFO_EXTENSION);
+				$update_filename = time() . "." . $image_ext;
+
+			} else {
+				$update_filename = $old_image;
+			}
+			$path = "../uploads";
+			$query = "UPDATE products SET 
+						category_id='$category_id',
+						name ='$name',
+						slug = '$slug',
+						small_description = '$small_description',
+						description = '$description',
+						original_price = '$original_price',
+						selling_price = '$selling_price',
+						qty = '$qty',
+						status = '$status',
+						trending = '$trending',
+						meta_title = '$meta_title',
+						meta_description = '$meta_description',
+						meta_keywords = '$meta_keywords',
+						image = '$update_filename'
+
+						WHERE id = '$id' ";
+			$result = $this->db->update($query);
+			if ($result) {
+				if ($_FILES['image']['name'] != "") {
+					move_uploaded_file($_FILES["image"]["tmp_name"], $path . '/' . $update_filename);
+					if (file_exists("../uploads/" . $old_image)) {
+						unlink("../uploads/" . $old_image);
+					}
+				}
+				$_SESSION['alert'] = 'Cập nhật thành công';
+				return true;
+			} else {
+				$_SESSION['alert'] = 'Cập nhật thất bại';
+				return false;
+			}
+
+		}
+
+
+	}
+	public function del_product($id)
+	{
+		$products_query = "SELECT * FROM products WHERE id = $id";
+		$pd_q_run = $this->db->select($products_query);
+		$products_data = $pd_q_run->fetch_assoc();
+		$image = $products_data['image'];
+		$query = "DELETE FROM products WHERE id = '$id'";
+		$result = $this->db->delete($query);
+		if ($result) {
+			if (file_exists("../uploads/" . $image)) {
+				if (unlink("../uploads/" . $image)) {
+					$_SESSION['alert'] = "Xóa thành công";
+					return true;
+				} else {
+					$_SESSION['alert'] = "Không thể xóa tệp tin";
+					return false;
+				}
+			} else {
+				$_SESSION['alert'] = "Tệp tin không tồn tại";
+				return false;
+			}
+		} else {
+			$_SESSION['alert'] = 'Xóa không thành công';
+			return false;
+		}
+	}
+
+
+	public function getproductbyId($id)
+	{
+		$query = "SELECT * FROM products where id = '$id' ";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function show_product_user($id)
+	{
+		$query = "SELECT * FROM products WHERE category_id='$id' AND status='1'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function show_product_detail($id)
+	{
+		$query = "SELECT * FROM products WHERE category_id='$id' AND status='1'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function getproductslug($slug)
+	{
+		$query = "SELECT * FROM products WHERE slug='$slug' LIMIT 1";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function show_product_qty($id)
+	{
+		$query = "SELECT * FROM products WHERE id='$id'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function show_product_slug($id, $slug)
+	{
+		$query = "SELECT * FROM products WHERE id='$id' AND slug='$slug'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+
+	public function insertWishlist($customer_id, $status, $id)
+	{
+
+		$productid = mysqli_real_escape_string($this->db->link, $id);
+		$customer_id = mysqli_real_escape_string($this->db->link, $customer_id);
+		if (empty($customer_id)) {
+			$_SESSION['error'] = "Đăng nhập để tiếp tục.";
+			return true;
+		} else {
+			// Kiểm tra xem sản phẩm đã có trong danh sách yêu thích chưa
+			$check_wlist = "SELECT * FROM tbl_wishlist WHERE prod_id = '$productid' AND customer_id = '$customer_id'";
+			$result_check_wlist = $this->db->select($check_wlist);
+
+			if ($result_check_wlist) {
+
+				$query_delete = "DELETE FROM tbl_wishlist WHERE prod_id = '$productid' AND customer_id = '$customer_id'";
+				$delete_status = $this->db->delete($query_delete);
+
+				if ($delete_status) {
+					$_SESSION['alert'] = "Đã xóa sản phẩm khỏi danh sách yêu thích.";
+					return true;
+				} else {
+					$_SESSION['error'] = "Xóa sản phẩm khỏi danh sách yêu thích không thành công.";
+					return false;
+				}
+			} else {
+				// Nếu sản phẩm chưa có trong danh sách yêu thích, thêm vào với trạng thái là '1'
+				$query_select_product = "SELECT * FROM products WHERE id = '$productid'";
+				$result = $this->db->select($query_select_product)->fetch_assoc();
+
+				if (!$result) {
+					$_SESSION['error'] = "Không tìm thấy sản phẩm.";
+					return false;
+				}
+
+				$prod_name = $result["name"];
+				$price = $result["selling_price"];
+				$image = $result["image"];
+
+				$status = '1'; // Trạng thái mới cho sản phẩm chưa có trong danh sách là '1'
+
+				$query_insert = "INSERT INTO tbl_wishlist(customer_id, prod_id, prod_name, price, image, status) 
+								VALUES ('$customer_id','$productid',  '$prod_name', '$price', '$image', '$status')";
+				$insert_whishlist = $this->db->insert($query_insert);
+
+				if ($insert_whishlist) {
+					$_SESSION['alert'] = "Sản phẩm đã được thêm vào danh sách yêu thích.";
+					return true;
+				} else {
+					$_SESSION['error'] = "Đã thêm vào danh sách yêu thích không thành công.";
+					return false;
+				}
+			}
+		}
+
+	}
+	// public function delWishlist($id)
+	// {
+	// 	$query = "DELETE FROM tbl_wishlist WHERE id = '$id'";
+	// 	$result = $this->db->delete($query);
+	// 	return $result;
+	// }
+
+	public function show_product_whishlist($id)
+	{
+		$id = mysqli_real_escape_string($this->db->link, $id);
+		$query = "SELECT * FROM tbl_wishlist WHERE prod_id = '$id'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function show_whishlist($customer_id)
+	{
+		$customer_id = mysqli_real_escape_string($this->db->link, $customer_id);
+		$query = "SELECT * FROM tbl_wishlist WHERE customer_id = '$customer_id' AND status='1'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+
+}
