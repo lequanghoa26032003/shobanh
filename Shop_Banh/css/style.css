@@ -199,7 +199,15 @@ ol {
 	padding: 13px 45px 11px;
 	cursor: pointer;
 }
-
+.min-btn {
+	color: #ffffff;
+	background: #e7ab3c;
+	border: 1px solid #e7ab3c;
+	font-size: 8px;
+	text-transform: uppercase;
+	padding: 5px;
+	cursor: pointer;
+}
 /* Preloder */
 
 #preloder {
@@ -1210,7 +1218,9 @@ ol {
 	transition: all 0.3s;
 	text-align: center;
 	width: 100%;
+	
 }
+
 
 .product-item .pi-pic ul li {
 	list-style: none;
@@ -3198,7 +3208,8 @@ ol {
 }
 
 .blog-item .bi-pic img {
-	min-width: 100%;
+	width: 420px;
+	height: 280px;
 }
 
 .blog-item .bi-text {
@@ -3426,6 +3437,8 @@ ol {
 .blog-details-inner .blog-post .prev-blog .pb-pic img {
 	height: 70px;
 	width: 70px;
+	border-radius: 50%;
+
 }
 
 .blog-details-inner .blog-post .prev-blog .pb-text {
@@ -3438,7 +3451,11 @@ ol {
 	color: #b2b2b2;
 	letter-spacing: 2px;
 }
-
+.blog-details-inner .blog-post .prev-blog .pb-text a {
+	font-size: 14px;
+	color: #b2b2b2;
+	letter-spacing: 2px;
+}
 .blog-details-inner .blog-post .prev-blog .pb-text h5 {
 	font-size: 20px;
 	color: #252525;
@@ -3495,17 +3512,24 @@ ol {
 	border-radius: 5px;
 	padding: 40px 65px;
 }
+.blog-details-inner .posted-by-reply {
+	border-radius: 5px;
+	padding: 20px 65px;
+}
 
 .blog-details-inner .posted-by .pb-pic {
+	margin-top: 10px;
 	float: left;
 }
 
 .blog-details-inner .posted-by .pb-text {
+
 	padding-left: 22px;
 	display: table;
 }
 
 .blog-details-inner .posted-by .pb-text a {
+
 	display: block;
 }
 
@@ -3517,11 +3541,11 @@ ol {
 
 .blog-details-inner .posted-by .pb-text p {
 	line-height: 30px;
-	margin-bottom: 0;
+	margin-bottom: 0px;
 }
 
 .blog-details-inner .leave-comment {
-	padding-top: 55px;
+	padding-top: 25px;
 }
 
 .blog-details-inner .leave-comment h4 {
@@ -3880,18 +3904,27 @@ ol {
 /* ------------------------------ Responsive Media Styles ---------------------------- */
 
 @media only screen and (min-width: 1200px) and (max-width: 1920px) {
+
 	.inner-header .advanced-search .input-group button {
 		right: -14px;
 	}
+	
 	.product-item .pi-pic ul li a {
 		padding: 16px 12px 12px 11px;
 	}
+	.nav-item .nav-menu .toggle{
+		display: none;
+	}
+	.nav-item .container .nav-menu {
+		padding: 0% 15%;
+	}
 	.nav-item .nav-menu li a {
-		padding: 16px 40px 15px;
+		padding: 16px 40px;
 	}
 }
 
 @media only screen and (min-width: 1200px) {
+
 	.container {
 		max-width: 1170px;
 	}
@@ -3900,6 +3933,12 @@ ol {
 /* Medium Device: 1200px */
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+	.nav-item .nav-menu .toggle{
+		display: none;
+	}
+	.nav-item .container .nav-menu {
+		padding: 0% 10%;
+	}
 	.inner-header .advanced-search .category-btn {
 		max-width: 36%;
 	}
@@ -3933,9 +3972,18 @@ ol {
 	.related-products .product-item .pi-pic ul li a {
 		padding: 16px 12px 12px 11px;
 	}
+	.related-products .product-item .pi-pic ul li a {
+		padding: 16px 12px 12px 11px;
+	}
 }
 
 @media only screen and (max-width: 991px) {
+	.nav-item .nav-menu .toggle{
+		display: none;
+	}
+	.nav-item .container .nav-menu {
+		padding: 0% 7%;
+	}
 	.banner-section {
 		padding: 80px 0 50px;
 	}
@@ -3993,6 +4041,12 @@ ol {
 /* Tablet Device: 768px */
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+	.nav-item .nav-menu .toggle{
+		display: none;
+	}
+	.nav-item .container .nav-menu {
+		padding: 0% 7%;
+	}
 	.header-top .ht-right .login-panel {
 		padding-left: 10px;
 	}
@@ -4022,7 +4076,7 @@ ol {
 		padding: 14px 40px 14px 18px;
 	}
 	.nav-item .nav-menu li a {
-		padding: 16px 10px 15px;
+		padding: 16px 26px;
 	}
 	.instagram-photo .insta-item .inside-text h5 {
 		font-size: 14px;
@@ -4051,6 +4105,7 @@ ol {
 /* Large Device: 480px */
 
 @media only screen and (max-width: 767px) {
+
 	.instagram-photo .insta-item {
 		width: 50%;
 		height: 300px;
@@ -4066,15 +4121,28 @@ ol {
 	}
 	.header-top .ht-left,
 	.header-top .top-social {
+		display: block;
+	}
+    .header-top .ht-left .mail-service {
+        font-size: 10px;
+    }
+	.header-top .ht-left .phone-service {
+        font-size: 10px;
+		padding-left: 10px;
+		padding-top: 10px;
+		padding-bottom: 15px;
+
+    }
+	.header-top .top-social{
 		display: none;
 	}
 	.header-top .ht-right .login-panel {
-		padding-top: 9px;
-		padding-bottom: 7px;
+		padding-top: 10px;
+		padding-bottom:  15px;
 	}
 	.header-top .ht-right .lan-selector {
-		margin-top: 5px;
-		margin-bottom: 5px;
+		margin-top: 10px;
+		margin-bottom: 15px;
 	}
 	.inner-header .advanced-search .category-btn {
 		display: none;
@@ -4097,11 +4165,33 @@ ol {
 	.nav-item .nav-depart .depart-btn {
 		padding: 14px 50px 14px 18px;
 	}
-	.nav-item {
+	/* .nav-item {
 		background: transparent;
+	} */
+
+	.nav-item .nav-menu .toggle{
+		display: block;
+		position: relative;
 	}
-	.nav-item .nav-menu {
-		display: none;
+	.nav-item .nav-menu ul {
+		position: absolute;
+		top: -1000px;
+		width: 200px;
+		background-color: #333;
+		display: inline-block;
+	}
+	
+	.nav-item .nav-menu ul.show{
+		top: 50px;
+		left: 28px;
+		z-index: 1000;
+	}
+	.nav-item .nav-menu ul li{
+		top:0;
+		width: 100%;
+		float: left;
+		text-align: center;
+		margin-left:1px;
 	}
 	.slicknav_menu {
 		display: block;
@@ -4222,6 +4312,29 @@ ol {
 /* Small Device: 320px */
 
 @media only screen and (max-width: 479px) {
+	.header-top .ht-left,
+	.header-top .top-social {
+		display: block;
+	}
+    .header-top .ht-left .mail-service {
+		display: none;
+    }
+	.header-top .ht-left .phone-service {
+		display: none;
+
+
+    }
+	.header-top .top-social{
+		display: none;
+	}
+	.header-top .ht-right .login-panel {
+		padding-top: 10px;
+		padding-bottom:  15px;
+	}
+	.header-top .ht-right .lan-selector {
+		margin-top: 10px;
+		margin-bottom: 15px;
+	}
 	.instagram-photo .insta-item {
 		width: 100%;
 	}

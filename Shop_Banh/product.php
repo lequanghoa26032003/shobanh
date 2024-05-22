@@ -13,22 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['whishlist'])) {
     // Lấy trạng thái từ biểu mẫu
     $insertWhishlist = $product->insertWishlist($userid, $status, $id);
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitcmt'])) {
-    $prod_id = $_POST['prod_id'];
-    $cmt = $_POST['cmt'];
-    // Lấy trạng thái từ biểu mẫu
-    $insertWhishlist = $us->insert_comment($userid, $prod_id, $cmt);
-}
-?>
-<style>
-    .red-heart {
-        color: red;
-    }
 
-    .grey-heart {
-        color: gray;
-    }
-</style>
+?>
+
 <!-- -->
 
 <!-- Breadcrumb Section Begin-->
@@ -142,18 +129,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitcmt'])) {
                                     <form action="" method="POST">
                                         <input type="hidden" name="prod_id" value="<?= $result['id'] ?>">
                                         <!-- Thêm trường ẩn để lưu trạng thái của yêu thích -->
-                                        <input type="hidden" name="status" value="<?= $whishlist_status ?>">
+                                        <input type="hidden" name="status" value="<?= $result['status'] ?>">
                                         <div class="pd-title">
                                             <span><?= $result['slug'] ?></span>
                                             <h3><?= $result['name'] ?></h3>
                                             <!-- Kiểm tra nếu trạng thái của yêu thích là 1, thêm class "clicked" -->
                                             <?php
-                                            $status = $product->show_product_whishlist($id);
+                                            $status = $product->show_product_whishlist($id,$userid);
                                             if (Session::get('auth') && $status !== false) {
                                                 if ($status1 = $status->fetch_assoc()) {
                                                     ?>
                                                     <button type="submit" name="whishlist"
-                                                        class="heart-icon <?= $whishlist_status == 1 ? 'clicked' : '' ?>">
+                                                        class="heart-icon">
                                                         <i
                                                             class="icon_heart_alt <?= $status1['status'] == 1 ? ' red-heart' : 'grey-heart' ?>"></i>
                                                     </button>
@@ -169,12 +156,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitcmt'])) {
                                         </div>
                                     </form>
                                     <div class="pd-rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i>
+                                        <?php
+                                        $get_star = $product->get_star($id);
+
+                                        if ($get_star) {
+                                            $tongsao = 0;
+                                            $solan = 0;
+                                            while ($result_star = $get_star->fetch_assoc()) {
+                                                $tongsao += $result_star['rating'];
+                                                $solan += 1;
+                                            }
+                                            // Tính trung bình số sao
+                                            $trungbinhsao = $tongsao / $solan;
+                                            ?>
+                                            <div class="row">
+                                                <span
+                                                    style="padding-left:16px; margin-right: 2px;"><?php echo $trungbinhsao ?></span>
+                                                <div class="rateyo" data-rateyo-rating="<?= $trungbinhsao; ?>"
+                                                    data-rateyo-num-stars="5" data-rateyo-star-width="16px">
+                                                </div>
+                                            </div>
+
+
+
+                                            <?php
+                                        } ?>
                                     </div>
+
+
                                     <div class="pd-desc">
                                         <p><?= $result['description'] ?></p>
                                         <h4> <?= $fm->format_currency($result['selling_price']) . "." . "VNĐ" ?>
@@ -254,87 +263,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitcmt'])) {
                 } ?>
                 <div class="product-tab">
                     <div class="customer-review-option">
-                        <h4>2 Comments</h4>
+                        <?php
+                        $cmt = $product->get_comment_count($id);
+                        $row = $cmt->fetch_assoc();
+                        if ($row['comment_count'] > 0) {
+                            ?>
+                            <h4><?= $row['comment_count'] . " bình luận" ?></h4>
+                        <?php } ?>
                         <div class="comment-option">
-                            <div class="co-item">
-                                <div class="avatar-pic">
-                                    <img src="img/product-single/avatar-1.png" alt="">
-                                </div>
-                                <div class="avatar-text">
-                                    <div class="at-rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                    <h5>Brandon Kelley<span>27 May 2024</span></h5>
-                                    <div class="at-reply">Nice !</div>
-                                </div>
-                                <div class="co-item">
-                                    <div class="avatar-pic">
-                                        <img src="img/product-single/avatar-1.png" alt="">
-                                    </div>
-                                    <div class="avatar-text">
-                                        <div class="at-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
+                            <?php $getcmt = $product->get_comment($id);
+                            if ($getcmt) {
+                                while ($result_cmt = $getcmt->fetch_assoc()) {
+                                    ?>
+                                    <div class="co-item">
+                                        <div class="avatar-pic">
+                                            <img src="uploads/<?= $result_cmt['image'] ?>" alt="">
                                         </div>
-                                        <h5>Brandon Kelley<span>27 May 2024</span></h5>
-                                        <div class="at-reply">Nice !</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="personal-rating">
-                                    <h6>Your Rating</h6>
-                                    <?php $list = $product->getproductbyId($id);
+                                        <div class="avatar-text">
 
-if ($list) {
-    while ($result = $list->fetch_assoc()) { ?>
-                                    <form action="" method="POST">
-                                        <div class="pd-rating">
-                                            <?php for ($count = 1; $count <= 5; $count++) {
-                                                if ($count <= 0) {
-                                                    $color = 'color:#FAC451';
+                                            <div class="rateyo" data-rateyo-rating="<?= $result_cmt['rating'] ?>"
+                                                data-rateyo-num-stars="5" data-rateyo-star-width="16px">
+                                            </div>
+
+                                        </div>
+                                        <h5><span><?= date('Y-m-d', strtotime($result_cmt['created_at'])); ?></span></h5>
+                                        <?php if ($result_cmt['comment'] == '') { ?>
+                                            <div class="at-reply">Hàng đẹp</div>
+
+                                            <?php
+                                        } else { ?>
+                                            <div class="at-reply"><?= $result_cmt['comment'] ?></div>
+                                        <?php } ?>
+                                    </div>
+                                <?php }
+                            } else { ?>
+                                <h4>Không có bình luận</h4>
+                            <?php } ?>
+
+                        </div>
+                        <div class="xly-rating">
+                            <div class="personal-rating leave-comment">
+                                <h6>Đánh giá của bạn</h6>
+                                <form action="" method="POST" class="comment-form">
+                                    <div class="pd-rating">
+                                        <?php if (isset($_SESSION['auth'])) {
+
+                                            $get_star = $product->get_yourating($id, $userid);
+                                            $yrating = 0;
+                                            if ($get_star) {
+
+                                                while ($result_star = $get_star->fetch_assoc()) {
+                                                    $yrating = $result_star['rating'];
+                                                }
+                                            }
+                                            for ($count = 1; $count <= 5; $count++) {
+                                                if ($count <= $yrating) {
+                                                    $color = 'color:#F39C12';
                                                 } else {
                                                     $color = 'color:#999591';
                                                 }
                                                 ?>
                                                 <li class="rating fa fa-star " style="cursor:pointer;<?= $color ?> "
-                                                    id="<?= $result['id'] ?>-<?= $count ?>" data-product_id="<?= $result['id'] ?>"
+                                                    id="<?= $id ?>-<?= $count ?>" data-product_id="<?= $id ?>"
                                                     data-rating="<?= $count ?>" data-index="<?= $count ?>"
-                                                    data-customer_id="<?= Session::get('id') ?>">
+                                                    data-customer_id="<?= $userid ?>">
                                                 </li>
-                                            <?php } ?>
+                                            <?php }
+                                        } else {
+                                            // Nếu không đăng nhập, hiển thị 5 ngôi sao không được chọn
+                                            for ($count = 1; $count <= 5; $count++) {
+                                                $color = 'color:#999591';
+                                                ?>
+                                                <li class="rating_login fa fa-star " style="cursor:pointer;<?= $color ?> "></li>
+                                            <?php }
+                                        }
+                                        ?>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-12 rating">
+                                            <textarea class="" name="cmt" placeholder="Messages"></textarea>
+                                            <button type="submit" name="submitcmt" class="site-btn"
+                                                value="">Gửi</button>
+
                                         </div>
-                                    </form>
-                                    <?php }
-                } ?>
-                                </div>
-                                <div class="leave-comment">
-                                    <h4>Leave A Comment</h4>
-                                    <form action="product.php?product=<?= $id ?>" method="POST" class="comment-form">
-                                        <input type="hidden" name="prod_id" value="<?= $id ?>" id="">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <textarea name="cmt" placeholder="Messages"></textarea>
-                                                <button type="submit" name="submitcmt" class="site-btn"
-                                                    value="<?= $id ?>">Send
-                                                    message</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    </div>
 </section>
 <!-- Product Shop Section End-->
 
@@ -344,120 +367,49 @@ if ($list) {
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title">
-                    <h2>Related Products</h2>
+                    <h2>Những sảm phẩm tương tự</h2>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="img/products/product-1.jpg" alt="">
-                        <div class="sale pp-sale">Sale</div>
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href=""><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="product.php">+ Quick-View</a></li>
-                            <li class="w-icon"><a href=""> <i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel
-                        </div>
-                        <a href="">
-                            <h5>Pure Pineapple</h5>
-                        </a>
-                        <div class="product-price">
-                            $14.00
-                            <span>$35.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="img/products/product-2.jpg" alt="">
-                        <div class="sale pp-sale">Sale</div>
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href=""><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="product.php">+ Quick-View</a></li>
-                            <li class="w-icon"><a href=""> <i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel
-                        </div>
-                        <a href="">
-                            <h5>Pure Pineapple</h5>
-                        </a>
-                        <div class="product-price">
-                            $14.00
-                            <span>$35.00</span>
+            <?php
+            $idpr = $product->getproductbyId($id);
+            $row=$idpr->fetch_assoc();
+            $cate_pr_id = $row['category_id'];
+            $product_cate = $product->show_product_category($cate_pr_id);
+            if ($product_cate) {
+                while ($result_pr = $product_cate->fetch_assoc()) {
+            ?>
+            
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="product-item">
+                            <div class="pi-pic">
+                                <img  style="height:265px; width:265px;" src="uploads/<?= $result_pr['image']?>" alt="">
+                                <div class="sale pp-sale">Sale</div>
+                                <ul>
+                                    <li class="w-icon active"><a href=""><i class="icon_bag_alt"></i></a></li>
+                                    <li class="quick-view"><a href="product.php">+ Thêm vào giỏ hàng</a></li>
+                                    <li class="w-icon"><a href=""><i class="fa fa-random"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="pi-text">
+                                <div class="catagory-name"><?= htmlspecialchars($result_pr['name']) ?></div>
+                                <a href="">
+                                    <h5><?= htmlspecialchars($result_pr['name']) ?></h5>
+                                </a>
+                                <div class="product-price">
+                                    <?= "₫" . $fm->format_currency($result_pr['selling_price']) ?>
+                                    <span><?= "₫" . $fm->format_currency($result_pr['original_price']) ?></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="img/products/product-3.jpg" alt="">
-                        <div class="sale pp-sale">Sale</div>
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href=""><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="product.php">+ Quick-View</a></li>
-                            <li class="w-icon"><a href=""> <i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel
-                        </div>
-                        <a href="">
-                            <h5>Pure Pineapple</h5>
-                        </a>
-                        <div class="product-price">
-                            $14.00
-                            <span>$35.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="img/products/product-4.jpg" alt="">
-                        <div class="sale pp-sale">Sale</div>
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href=""><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="product.php">+ Quick-View</a></li>
-                            <li class="w-icon"><a href=""> <i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel
-                        </div>
-                        <a href="">
-                            <h5>Pure Pineapple</h5>
-                        </a>
-                        <div class="product-price">
-                            $14.00
-                            <span>$35.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php
+                }
+            }
+            ?>
         </div>
+
     </div>
 </div>
 <!-- Related Products Section End-->

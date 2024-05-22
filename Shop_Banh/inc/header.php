@@ -17,6 +17,8 @@ $cart = new cart();
 $us = new user();
 $cat = new Category();
 $product = new Product();
+$blog=new blog();
+$category_blog=new category_blog();
 if (isset($_GET['category'])) {
     $slug = $_GET['category'];
     $idcat = $cat->show_slug_id($slug);
@@ -52,6 +54,9 @@ if (isset($_GET['category'])) {
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 
     <!-- Custom Styles -->
     <style>
@@ -99,7 +104,23 @@ if (isset($_GET['category'])) {
         .lan-selector:hover .dropbtn {
             background-color: #f9f9f9;
         }
-    </style>
+
+    .red-heart {
+        color: red;
+    }
+
+    .grey-heart {
+        color: gray;
+    }
+
+    .rateyo {
+        pointer-events: none;
+
+    }
+    .ui-slider .ui-slider-range {
+    background-color: #e7ab3c !important;
+}
+</style>
 </head>
 
 <body>
@@ -130,7 +151,7 @@ if (isset($_GET['category'])) {
                                 if ($list) {
                                     $result = $list->fetch_assoc();
                                     if (!empty($result['image'])) {
-                                        echo '<img style="width:26px;height:26px;" src="uploads/' . $result['image'] . '" alt="Avatar" class="avatar">';
+                                        echo '<img  style="width:30px;height:30px;border-radius: 50%;" src="uploads/' . $result['image'] . '" alt="" class="avatar">';
                                     } else {
                                         echo '<i class="fa fa-user" style="margin: 0 5px 0 5px"></i>';
                                     }
@@ -139,7 +160,16 @@ if (isset($_GET['category'])) {
                                 <?php echo Session::get('name'); ?>
                             </button>
                             <div class="dropdown-content">
-                                <a href="user_profile.php"><i class="fa fa-user-circle"></i> Hồ sơ</a>
+                                <a href="user_profile.php">
+                                    <?php
+                                    if (!empty($result['image'])) {
+                                        echo '<img  style="width:30px;height:30px;border-radius: 50%;" src="uploads/' . $result['image'] . '" alt="" class="avatar">';
+                                    } else {
+                                        echo '<i class="fa fa-user-circle"></i>';
+                                    }
+                                    ?>
+                                    Hồ sơ
+                                </a>
                                 <a href="change_pass_user.php"><i class="fa fa-key"></i> Đổi mật khẩu</a>
                             </div>
                         </div>
@@ -152,10 +182,8 @@ if (isset($_GET['category'])) {
                         Session::destroy();
                     }
                     ?>
-
-
                     <div class="top-social">
-                        <a href="#" class="ti-facebook"></a>
+                        <a href="https://www.facebook.com/hoa.kieu.x5" class="ti-facebook"></a>
                         <a href="#" class="ti-twitter-alt"></a>
                         <a href="#" class="ti-linkedin"></a>
                         <a href="#" class="ti-pinterest"></a>
@@ -307,56 +335,30 @@ if (isset($_GET['category'])) {
         </div>
         <div class="nav-item">
             <div class="container">
-                <div class="nav-depart">
-                    <div class="depart-btn">
-                        <i class="ti-menu"></i>
-                        <span>Danh sách</span>
-                        <ul class="depart-hover">
-                            <li><a class="active" href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                            <li><a href="#">Tui Do nu nam </a></li>
-                        </ul>
-                    </div>
-                </div>
+
                 <nav class="nav-menu mobile-menu">
+                    <label for="" class="toggle" >
+                        <li class=""><a ><i class="ti-menu"></i> Menu</a></li>
+                    </label>
                     <ul>
-                        <li class="<?= $page == "index.php" ? 'active' : '' ?>"><a href="index.php">Trang chủ </a></li>
-                        <li class="<?= $page == "shop.php" ? 'active' : '' ?>"><a href="shop.php">Cửa hàng </a>
-                            <ul class="dropdown">
-                                <?php $slugcat = $cat->show_category();
-                                if (isset($slugcat)) {
-                                    while ($result = $slugcat->fetch_assoc()) { ?>
 
-                                        <li><a href="shop.php?category=<?= $result['slug']; ?>"><?= $result['slug'] ?></a></li>
-                                    <?php }
-                                } else {
-                                    echo '';
-                                }
-
-                                ?>
-                            </ul>
-                        </li>
-                        <li class="<?= $page == "blog.php" ? 'active' : '' ?>"><a href="blog.php">Tin tức </a></li>
+                        <li class="<?= $page == "index.php" ? 'active' : '' ?>"><a href="index.php">Trang chủ</a></li>
+                        <li class="<?= $page == "shop.php" ? 'active' : '' ?>"><a href="shop.php">Cửa hàng</a></li>
+                        <li class="<?= $page == "blog.php" ? 'active' : '' ?>"><a href="blog.php">Tin tức</a></li>
                         <li class="<?= $page == "contact.php" ? 'active' : '' ?>"><a href="contact.php">Liên hệ</a></li>
                         <li class="<?= $page == "pages.php" ? 'active' : '' ?>"><a href="#">Trang</a>
                             <ul class="dropdown">
-                                <li><a href="blog-details.php">Chi tiết Blog</a></li>
+                                <li><a href="my-order.php">Lịch sử đặt hàng</a></li>
                                 <li><a href="shopping-cart.php">Giỏ hàng</a></li>
                                 <li><a href="check-out.php">Thủ tục thanh toán</a></li>
-                                <li><a href="faq.php">Câu hỏi thường gặp</a></li>
                                 <li><a href="register.php">Đăng ký</a></li>
                                 <li><a href="login.php">Đăng nhập</a></li>
                             </ul>
                         </li>
                     </ul>
                 </nav>
-                <div class="mobile-menu-wrap"></div>
             </div>
         </div>
+
     </header>
     <!-- Header Section End-->

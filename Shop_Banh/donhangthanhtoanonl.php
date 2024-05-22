@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn-order'])) {
 </div>
 <!-- Breadcrumb Section End-->
 <!-- -->
-
 <!-- Shopping Cart Section Begin -->
 <div class="checkout-section spad">
     <div class="container">

@@ -9,6 +9,11 @@ if (isset($_GET['delId'])) {
     $id = $_GET['delId'];
     $delproduct = $product->del_product($id);
 }
+if (isset($_GET['id']) && isset($_GET['type'])) {
+    $id = $_GET['id'];
+    $type = $_GET['type'];
+    $stproduct = $product->update_status_product($id, $type);
+}
 ?>
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
     data-scroll="true">
@@ -82,8 +87,17 @@ if (isset($_GET['delId'])) {
                                     </td>
 
                                     <td class="align-middle text-center text-sm">
-                                        <?php echo $result['status'] == '0' ? "Visible" : "Hidden" ?>
-                                    </td>
+                                    <?php if ($result['status'] == 1) {
+                                            ?>
+                                            <a href="?id=<?= $result['id'] ?> &type=0">On</a>
+                                            <?php
+                                        } else { ?>
+                                            <a href="?id=<?= $result['id'] ?> &type=1">Off</a>
+
+                                            <?php
+                                        }
+
+                                        ?>                                    </td>
                                     <td class="align-middle text-center">
                                         <a href="product-edit.php?id=<?php echo $result['id']; ?>"
                                             class="btn bg-gradient-success" data-toggle="tooltip"

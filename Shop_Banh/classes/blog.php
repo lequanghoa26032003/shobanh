@@ -153,5 +153,100 @@ class blog
         $result = $this->db->select($query);
         return $result;
     }
-
+    public function insert_blog_comment($userid, $blog_id, $cmt){
+		if(!empty($userid)){
+            if(empty($cmt)){
+            $_SESSION['error']='Không thể gửi bình luận trống';
+            return true;
+            }else{
+                $insert_query = "INSERT INTO tbl_blog_comments(user_id,blog_id, cmt) VALUES ( '$userid', '$blog_id', '$cmt')";
+                $insert_result = $this->db->insert($insert_query);
+                if ($insert_result) {
+                    $_SESSION['alert'] = 'Đã thêm mới bình luận thành công';
+                    return true;
+                } else {
+                    $_SESSION['error'] = 'Có lỗi xảy ra';
+                    return false;
+                }
+            }
+        }else{
+            $_SESSION['error']='Vui lòng đăng nhập để bình luận';
+            return true;
+        }
+	}
+    public function show_blog_comment($blog_id){
+		$select_query = "SELECT b.id as bid,u.id as uid,b.*,u.* FROM  tbl_blog_comments b JOIN users u ON b.user_id =u.id WHERE blog_id='$blog_id' ";
+		$select_result = $this->db->select($select_query);
+        return $select_result;
+	}
+    public function update_blog_comment($id, $cmt){
+		$update_query = "UPDATE tbl_blog_comments SET cmt= '$cmt' WHERE id='$id' ";
+		$update_result = $this->db->update($update_query);
+		if ($update_result) {
+			$_SESSION['alert'] = 'Cập nhật bình luận thành công';
+			return true;
+		} else {
+			$_SESSION['error'] = 'Có lỗi xảy ra';
+			return false;
+		}
+	}
+    public function del_blog_comment($blog_comment_id){
+		$select_query = "DELETE FROM  tbl_blog_comments   WHERE id='$blog_comment_id' ";
+		$select_result = $this->db->delete($select_query);
+        if ($select_result) {
+			$_SESSION['alert'] = 'Xóa bình luận thành công';
+			return true;
+		} else {
+			$_SESSION['error'] = 'Có lỗi xảy ra';
+			return false;
+		}  
+    }
+    public function insert_reply_blog_comment($blog_comment_id,$us, $cmt){
+            if(empty($cmt)){
+            $_SESSION['error']='Không thể gửi bình luận trống';
+            return true;
+            }else{
+                $insert_query = "INSERT INTO tbl_reply_to_comments(blog_comment_id,user_id, cmt) VALUES ('$blog_comment_id','$us', '$cmt')";
+                $insert_result = $this->db->insert($insert_query);
+                if ($insert_result) {
+                    $_SESSION['alert'] = 'Đã thêm mới bình luận thành công';
+                    return true;
+                } else {
+                    $_SESSION['alert'] = 'Có lỗi xảy ra';
+                    return false;
+                }
+            }
+    }
+    public function show_reply_blog_comment($blog_cmt_id){
+		$select_query = "SELECT u.id as uid ,u.name as uname, u.image as uimage, r.cmt as rcmt,r.id as rid
+        FROM tbl_reply_to_comments r 
+        JOIN tbl_blog_comments b ON r.blog_comment_id = b.id 
+        JOIN users u ON r.user_id = u.id 
+        WHERE r.blog_comment_id = '$blog_cmt_id'
+        ";
+		$select_result = $this->db->select($select_query);
+        return $select_result;
+	}
+    public function update_reply_blog_comment($id, $cmt){
+		$update_query = "UPDATE tbl_reply_to_comments SET cmt= '$cmt' WHERE id='$id'";
+		$update_result = $this->db->update($update_query);
+		if ($update_result) {
+			$_SESSION['alert'] = 'Cập nhật bình luận thành công';
+			return true;
+		} else {
+			$_SESSION['alert'] = 'Có lỗi xảy ra';
+			return false;
+		}
+	}
+    public function del_blog_comment_reply($id){
+		$select_query = "DELETE FROM  tbl_reply_to_comments WHERE id='$id' ";
+		$select_result = $this->db->delete($select_query);
+		if ($select_result) {
+			$_SESSION['alert'] = 'Xóa bình luận thành công';
+			return true;
+		} else {
+			$_SESSION['error'] = 'Có lỗi xảy ra';
+			return false;
+		}    
+    }
 }

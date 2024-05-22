@@ -1,11 +1,11 @@
 <?php
 include 'includes/header.php';
-include '../classes/post.php';
+include '../classes/category_blog.php';
 include '../classes/blog.php';
 
 ?>
 <?php
-$post = new post();
+$category_blog = new category_blog();
 $blog = new blog();
 
 if (!isset($_GET['id']) || $_GET['id'] == null) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                         <select name="category_post_id" id="" class="form-control">
                                             <option selected value="">------------------Chọn danh mục---------------</option>
                                             <?php
-                                            $getcat = $post->show_post();
+                                            $getcat = $category_blog->show_category_blog();
                                             if ($getcat && $getcat->num_rows > 0) {
                                                 while ($result1 = $getcat->fetch_assoc()) {
 
@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
                                     <div class="col-md-12">
                                         <label for="des">description</label>
-                                        <input placeholder="Nhập tên sản phẩm" id="des" name="description"
-                                            value="<?= $result['description'] ?>" type="text" class="form-control">
+                                        <textarea placeholder="Nhập tên sản phẩm" id="des" name="description"
+                                            value="" type="text" class="form-control"><?= $result['description'] ?></textarea>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="des">Content</label>

@@ -9,6 +9,11 @@ if (isset($_GET['delId'])) {
     $id = $_GET['delId'];
     $delcategory = $category->del_category($id);
 }
+if (isset($_GET['id']) && isset($_GET['type'])) {
+    $id = $_GET['id'];
+    $type = $_GET['type'];
+    $stcategory = $category->update_status_category($id, $type);
+}
 ?>
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
     data-scroll="true">
@@ -55,8 +60,7 @@ if (isset($_GET['delId'])) {
                                 STT</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                 Tên sản phẩm</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Hình ảnh</th>
+
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                 Status</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -76,14 +80,20 @@ if (isset($_GET['delId'])) {
                                     </td>
                                     <td class="align-middle text-center text-sm"><?php echo $result['name']; ?>
                                     </td>
-                                    <td class="align-middle text-center text-sm">
-                                        <img style="height:70px; width:70px;" src="../uploads/<?= $result['image']; ?>"
-                                            alt="<?php echo $result['image']; ?>">
-                                    </td>
+
 
                                     <td class="align-middle text-center text-sm">
-                                        <?php echo $result['status'] == '0' ? "Visible" : "Hidden" ?>
-                                    </td>
+                                    <?php if ($result['status'] == 1) {
+                                            ?>
+                                            <a href="?id=<?= $result['id'] ?> &type=0">On</a>
+                                            <?php
+                                        } else { ?>
+                                            <a href="?id=<?= $result['id'] ?> &type=1">Off</a>
+
+                                            <?php
+                                        }
+
+                                        ?>                                    </td>
                                     <td class="align-middle text-center">
                                         <a href="category-edit.php?id=<?php echo $result['id']; ?>"
                                             class="btn bg-gradient-success" data-toggle="tooltip"

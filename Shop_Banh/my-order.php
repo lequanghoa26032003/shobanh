@@ -44,58 +44,62 @@ include 'inc/header.php';
                         </thead>
 
                         <?php
-                        $tong = 0;
+                        if(!empty($_SESSION['id'])){
 
-                        $list = $cart->get_Order();
-                        if ($list) {
-                            while ($result = $list->fetch_assoc()) {
-                                $i = 1 ?>
-                                <table class="product_data">
+                            $tong = 0;
 
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 10%;" class="p-stt first-row"><?= $i++ ?></td>
-                                            <td style="width: 30%;" class="p-title first-row">
-                                                <h5><?= $result['tracking_no'] ?></h5>
-                                            </td>
-                                            <td style="width: 15%;" class="p-price first-row">
-                                                <?= "₫" . $fm->format_currency($result['total_price']) ?>
-                                            </td>
-                                            <td style="width: 15%;" class="qua-col first-row">
-                                                <?= $result['created_at'] ?>
+                            $list = $cart->get_Order();
+                            if ($list) {
+                                while ($result = $list->fetch_assoc()) {
+                                    $i = 1 ?>
+                                    <table class="product_data">
 
-                                            </td>
-                                            <td style="width: 15%;" class="qua-col first-row">
-                                                <?php if ($result['status'] == 0) {
-                                                    echo "Đang chờ";
-                                                } else if ($result['status'] == 1) {
-                                                    echo "<span style='color: green;'>Hoàn thành</span>";
-                                                } else if ($result['status'] == 2) {
-                                                    echo "<span style='color: red;'>Đã hủy</span>";
-                                                } ?>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 10%;" class="p-stt first-row"><?= $i++ ?></td>
+                                                <td style="width: 30%;" class="p-title first-row">
+                                                    <h5><?= $result['tracking_no'] ?></h5>
+                                                </td>
+                                                <td style="width: 15%;" class="p-price first-row">
+                                                    <?= "₫" . $fm->format_currency($result['total_price']) ?>
+                                                </td>
+                                                <td style="width: 15%;" class="qua-col first-row">
+                                                    <?= $result['created_at'] ?>
 
-                                            </td>
-                                            <td style="width: 15%;" class="total-price first-row">
-                                                <button class="viewDetail btn btn-info" value="">
-                                                    <i class="fa fa-info-circle"></i> <a style="color:white;"
-                                                        href="my-order-detail.php?t=<?= $result['tracking_no'] ?>">Chi
-                                                        tiết</a>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </td>
+                                                <td style="width: 15%;" class="qua-col first-row">
+                                                    <?php if ($result['status'] == 0) {
+                                                        echo "Đang chờ";
+                                                    } else if ($result['status'] == 1) {
+                                                        echo "<span style='color: green;'>Hoàn thành</span>";
+                                                    } else if ($result['status'] == 2) {
+                                                        echo "<span style='color: red;'>Đã hủy</span>";
+                                                    } ?>
 
-                                <?php
+                                                </td>
+                                                <td style="width: 15%;" class="total-price first-row">
+                                                    <button class="viewDetail btn btn-info" value="">
+                                                        <i class="fa fa-info-circle"></i> <a style="color:white;"
+                                                            href="my-order-detail.php?t=<?= $result['tracking_no'] ?>">Chi
+                                                            tiết</a>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <?php
+                                }
+                            } else {
+                                echo '<div class="col-lg-12">
+                                        <div class="checkout-content mx-auto d-block">
+                                            <a href="login.php" class="content-btn">Bạn chưa đặt đơn hàng nào</a>
+                                        </div>
+                                    </div>';
                             }
-                        } else {
-                            echo '<div class="col-lg-12">
-                                    <div class="checkout-content mx-auto d-block">
-                                        <a href="login.php" class="content-btn">Bạn chưa đặt đơn hàng nào</a>
-                                    </div>
-                                </div>';
+                        }else {
+                           
                         }
-
                         ?>
 
                 </div>

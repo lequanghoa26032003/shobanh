@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                     <form action="product-create.php" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="name">Select Category</label>
+                                <label for="name">Chọn hãng</label>
                                 <select class="form-control" name="category_id" id="" class="form-select">
                                     <option selected value="">------------------Chọn danh mục---------------</option>
                                     <?php
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                 <input placeholder="Nhập tên sản phẩm" id="name" name="name" type="text"
                                     class="form-control">
                             </div>
+
                             <div class="col-md-6">
                                 <label for="slug">Slug</label>
                                 <input placeholder="Nhập Slug" id="slug" name="slug" type="text" class="form-control">

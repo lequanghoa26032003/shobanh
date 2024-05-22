@@ -104,26 +104,49 @@
 		</div>
 	</div>
 </footer>
-<!-- Footer Section End -->
-<!-- Js Plugins -->
 <script src="js/jquery-3.3.1.min.js"></script>
-
 <script src="js/bootstrap.min.js"></script>
-
 <script src="js/jquery-ui.min.js"></script>
-
 <script src="js/jquery.countdown.min.js"></script>
 <script src="js/jquery.nice-select.min.js"></script>
 <script src="js/jquery.zoom.min.js"></script>
 <script src="js/jquery.dd.min.js"></script>
 <script src="js/jquery.slicknav.js"></script>
-
 <script src="js/owl.carousel.min.js"></script>
-
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
-
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
+<script>
+$(document).ready(function(){
+        $(".toggle").click(function(){
+            $(".nav-item .nav-menu ul").toggleClass('show');
+        });
+    });
+</script>
+<script>
+
+function toggleReplyForm(id) {
+    var replyForm = document.getElementById('reply-form-' + id);
+    if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+        replyForm.style.display = 'block'; // Hiển thị
+    } else {
+        replyForm.style.display = 'none'; // Ẩn đi
+    }
+}
+$('.reply-cmt').click(function (event) {
+		alert('Vui lòng đăng nhập để thực hiện');
+	});
+function tonggleEdit(id){
+	var editForm= document.getElementById('edit-form-'+id);
+	if(editForm.style.display=='none'||editForm.style.display===''){
+		editForm.style.display='block';
+	}else{
+		editForm.style.display='none';
+	}
+}
+</script>
 
 <script>
 	alertify.set('notifier', 'position', 'top-right');
@@ -153,34 +176,118 @@
 		// alert(product_id);
 		remove_background(product_id);
 		for (var count = 1; count <= index; count++) {
-			$('#' + product_id + '-' + count).css('color', '#FAC451');
+			$('#' + product_id + '-' + count).css('color', '#F39C12');
 		}
 	});
 
 
 </script>
 <script>
-	// $('.rating').click(function () {
-	// 	var index = $(this).data("index"); //3
-	// 	var product_id = $(this).data('product_id');
-	// 	var customer_id = $(this).data('customer_id');
-	// 	$.ajax(
-	// 		{
-	// 			url: 'classes/product.php',
-	// 			data: { index: index, product_id: product_id, customer_id: customer_id },
-	// 			type: 'POST',
-	// 			success: function (data) {
-
-	// 				alert('Đánh giá ' + index + ' sao thành công');
+	$('.rating').on('mouseover', function () {
+		var index = $(this).data("index");
+		var product_id = $(this).data('product_id');
+		var customer_id = $(this).data('customer_id');
+		var cmt = $('textarea[name="cmt"]').val();
 
 
+		$.ajax({
+			url: 'classes/product.php',
+			data: { index: index, product_id: product_id, customer_id: customer_id, cmt: cmt },
+			type: 'POST',
+		});
+	});
 
-	// 			}
-	// 		});
-	// })
-	// $(document).on('mouseenter', '.rating_login', function () {
-	// 	alert('Làm ơn đăng nhập để đánh giá sao.');
-	// })
+	$('.rating_login').click(function (event) {
+		alert('Vui lòng đăng nhập để đánh giá');
+	});
+
+</script>
+<script>
+
+
+	$(function () {
+		$(".rateyo").rateYo();
+	});
+
+
+</script>
+
+<style>
+#loading
+{
+ text-align:center; 
+ background: url('loader.gif') no-repeat center; 
+ height: 150px;
+}
+</style>
+<script>
+	$(document).ready(function(){
+
+filter_data();
+
+function filter_data()
+{
+	$('.filter_data').html('<div id="loading" style="" ></div>');
+	var action = 'fetch_data';
+	var minimum_price = $('#hidden_minimum_price').val();
+	var maximum_price = $('#hidden_maximum_price').val();
+
+	var brand = get_filter('brand');
+	$.ajax({
+		url:"classes/filter.php",
+		method:"POST",
+		data:{action:action, minimum_price:minimum_price, maximum_price:maximum_price, brand:brand},
+		success:function(data){
+			$('.filter_data').html(data);
+		}
+	});
+}
+
+function get_filter(class_name)
+{
+	var filter = [];
+	$('.'+class_name+':checked').each(function(){
+		filter.push($(this).val());
+	});
+	return filter;
+}
+
+$('.common_selector').click(function(){
+	filter_data();
+});
+
+$('#price_range').slider({
+	range:true,
+	min:1000,
+	max:650000,
+	values:[1000, 650000],
+	step:100000,
+	stop:function(event, ui)
+	{
+		$('#price_show').html(ui.values[0] + ' - ' + ui.values[1]);
+		$('#hidden_minimum_price').val(ui.values[0]);
+		$('#hidden_maximum_price').val(ui.values[1]);
+		filter_data();
+	}
+});
+
+});
+</script>
+<script>
+	$(document).ready(function(){
+		$("#live_search").keyup(function(){
+			var input=$(this).val();
+			alert(input);
+			$.ajax({
+				url:"classes/blog.php",
+				method:"POST",
+				data:{input:input},
+				success:function(data){
+					$('#search_result').html(data);
+				}
+			});
+		});
+	});
 </script>
 </body>
 

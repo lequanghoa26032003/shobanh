@@ -32,6 +32,97 @@
 <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+ <!-- <script src="https://cdn.ckeditor.com/ckeditor5/12.3.1/classic/ckeditor.js"></script> -->
+
+<script src="../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+<script type="" src="ckfinder/ckfinder.js"></script>
+
+<script>
+     
+    ClassicEditor.create(document.querySelector('#des'), {
+                ckfinder: {
+                    // Upload the images to the server using the CKFinder QuickUpload command.
+                    uploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
+         
+                    // Define the CKFinder configuration (if necessary).
+                    options: {
+                        resourceType: 'Images'
+                    }
+                },
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strikethrough',
+                        'subscript',
+                        'superscript',
+                        'alignment',
+                        '|',
+                        'fontFamily',
+                        'fontSize',
+                        'fontColor',
+                        'fontBackgroundColor',
+                        'highlight',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'outdent',
+                        'indent',
+                        '|',
+                        'link',
+                        'imageInsert',
+                        'imageUpload',
+                        'blockQuote',
+                        'insertTable',
+                        'mediaEmbed',
+                        'code',
+                        'specialCharacters',
+                        '|',
+                        'undo',
+                        'redo',
+                        '|',
+                        'CKFinder'
+                    ],
+                    shouldNotGroupWhenFull: true,
+                },
+                language: 'en',
+                image: {
+                    toolbar: [
+                        'imageTextAlternative',
+                        'imageStyle:full',
+                        'imageStyle:side',
+                        'linkImage'
+                    ]
+                },
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells',
+                        'tableCellProperties',
+                        'tableProperties'
+                    ]
+                },
+                licenseKey: '',
+         
+         
+            })
+            .then(editor => {
+                window.editor = editor;
+         
+                CKFinder.setupCKEditor(editor);
+                console.log( Array.from( editor.ui.componentFactory.names() ) );
+            })
+            .catch(error => {
+              
+                console.error(error);
+            });
+ </script>
+
 
 <script>
     <?php if (isset($_SESSION['alert'])) { ?>
@@ -42,6 +133,7 @@
         unset($_SESSION['alert']);
     } ?>
 </script>
+
 </body>
 
 </html>

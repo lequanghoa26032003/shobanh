@@ -125,8 +125,7 @@ if (isset($_GET['t'])) {
                                         </option>
                                     </select>
                                     <br>
-                                    <button type="submit" name="update_order_btn" class="btn btn-primary">Update
-                                        Status</button>
+                                    <button type="submit" name="update_order_btn" class="btn btn-primary">Cập nhật trạng thái đơn hàng</button>
                                 </form>
                             </div>
                         </div>

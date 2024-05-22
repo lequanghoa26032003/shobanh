@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <form method="post" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="name">Select Category</label>
+                                        <label for="name">Chọn hãng</label>
                                         <select name="category_id" id="" class="form-control">
                                             <option selected value="">------------------Chọn danh mục---------------</option>
                                             <?php
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                     <div class="col-md-12">
                                         <label for="des">Small description</label>
                                         <textarea placeholder="Nhập tên sản phẩm" id="des" name="small_description" type="text"
-                                            class="form-control"><?= $result['small_description'] ?></textarea>
+                                            class="form-control"> <?= $result['small_description'] ?></textarea>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="des">description</label>

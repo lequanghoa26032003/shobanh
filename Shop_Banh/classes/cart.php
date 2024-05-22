@@ -125,7 +125,7 @@ class cart
             $_SESSION['error'] = "Hãy nhập đầy đủ các trường thông tin";
             return false;
         }
-        $tracking_no = "sharmacoder" . rand(1111, 9999) . substr($phone, 2);
+        $tracking_no = "shoa_shop" . rand(1111, 9999) . substr($phone, 2);
         $user_id = $_SESSION['id'];
         $insert = "INSERT INTO orders (tracking_no,user_id,name,phone,email,address,total_price,payment_mode) VALUES ('$tracking_no','$user_id','$name','$phone','$email',
         '$address','$total_price','$payment_mode') ";
@@ -156,6 +156,7 @@ class cart
     }
     public function get_Order()
     {
+
         $userid = $_SESSION['id'];
         $query = "SELECT * FROM orders  WHERE user_id='$userid'";
         $result = $this->db->select($query);

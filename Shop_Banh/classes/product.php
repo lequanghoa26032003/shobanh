@@ -1,5 +1,8 @@
 <?php
 $filepath = realpath(dirname(__FILE__));
+include_once ($filepath . '/../lib/session.php');
+
+
 include_once ($filepath . '/../lib/database.php');
 include_once ($filepath . '/../helpers/format.php');
 if (session_status() == PHP_SESSION_NONE) {
@@ -37,9 +40,42 @@ if (session_status() == PHP_SESSION_NONE) {
 
 	}
 }
-// if(isset($_POST['index'])){
-// 	$
-// }
+if (isset($_POST['index'])) {
+	$index = $_POST['index'];
+	$prod_id = $_POST['product_id'];
+	$customerid = $_POST['customer_id'];
+	$cmt = $_POST['cmt'];
+
+	$check_query = "SELECT id FROM tbl_rating WHERE user_id='$customerid' AND prod_id='$prod_id'";
+	$check_result = mysqli_query($con, $check_query);
+
+	if ($check_result && mysqli_num_rows($check_result) > 0) {
+		$row = mysqli_fetch_assoc($check_result);
+		$rating_id = $row['id'];
+		$update_query = "UPDATE tbl_rating SET rating='$index', comment='$cmt' WHERE id='$rating_id'";
+		$update_result = mysqli_query($con, $update_query);
+		if ($update_result) {
+			$_SESSION['alert'] = 'Đã cập nhật đánh giá và comment thành công';
+			return true;
+		} else {
+			$_SESSION['alert'] = 'Có lỗi xảy ra khi cập nhật đánh giá và comment';
+			return false;
+		}
+	} else {
+		$insert_query = "INSERT INTO tbl_rating(prod_id, user_id, rating, comment) VALUES ('$prod_id', '$customerid', '$index', '$cmt')";
+		$insert_result = mysqli_query($con, $insert_query);
+		if ($insert_result) {
+			$_SESSION['alert'] = 'Đã thêm mới đánh giá và comment thành công';
+			return true;
+		} else {
+			$_SESSION['alert'] = 'Có lỗi xảy ra khi thêm mới đánh giá và comment';
+			return false;
+		}
+	}
+}
+
+
+
 ?>
 
 
@@ -265,21 +301,25 @@ class product
 		$result = $this->db->select($query);
 		return $result;
 	}
-	public function show_product_user($id)
+
+	public function show_product_category($id)
 	{
 		$query = "SELECT * FROM products WHERE category_id='$id' AND status='1'";
 		$result = $this->db->select($query);
 		return $result;
 	}
-	public function show_product_detail($id)
-	{
-		$query = "SELECT * FROM products WHERE category_id='$id' AND status='1'";
-		$result = $this->db->select($query);
-		return $result;
-	}
+
+
+
 	public function getproductslug($slug)
 	{
 		$query = "SELECT * FROM products WHERE slug='$slug' LIMIT 1";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function getproductbrand($name)
+	{
+		$query = "SELECT * FROM products WHERE name='$name' LIMIT 1";
 		$result = $this->db->select($query);
 		return $result;
 	}
@@ -289,12 +329,12 @@ class product
 		$result = $this->db->select($query);
 		return $result;
 	}
-	public function show_product_slug($id, $slug)
-	{
-		$query = "SELECT * FROM products WHERE id='$id' AND slug='$slug'";
-		$result = $this->db->select($query);
-		return $result;
-	}
+	// public function show_product_slug($id, $slug)
+	// {
+	// 	$query = "SELECT * FROM products WHERE id='$id' AND slug='$slug'";
+	// 	$result = $this->db->select($query);
+	// 	return $result;
+	// }
 
 	public function insertWishlist($customer_id, $status, $id)
 	{
@@ -359,10 +399,10 @@ class product
 	// 	return $result;
 	// }
 
-	public function show_product_whishlist($id)
+	public function show_product_whishlist($id,$us)
 	{
 		$id = mysqli_real_escape_string($this->db->link, $id);
-		$query = "SELECT * FROM tbl_wishlist WHERE prod_id = '$id'";
+		$query = "SELECT * FROM tbl_wishlist WHERE prod_id = '$id' AND customer_id='$us' ";
 		$result = $this->db->select($query);
 		return $result;
 	}
@@ -373,5 +413,43 @@ class product
 		$result = $this->db->select($query);
 		return $result;
 	}
+	public function get_star($id)
+	{
+		$query = "SELECT * FROM tbl_rating WHERE prod_id='$id'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function get_comment_count($id)
+	{
+		$query = "SELECT COUNT(*) AS comment_count FROM tbl_rating WHERE prod_id='$id'";
+		$result = $this->db->select($query);
+		return $result;
 
+	}
+
+	public function get_yourating($id, $userid)
+	{
+		$query = "SELECT * FROM tbl_rating WHERE prod_id='$id'AND user_id='$userid'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function get_comment($id)
+	{
+		$query = "SELECT * FROM tbl_rating r JOIN users u ON r.user_id=u.id WHERE r.prod_id='$id'";
+		$result = $this->db->select($query);
+		return $result;
+	}
+	public function update_status_product($id, $status)
+    {
+
+        $status = mysqli_real_escape_string($this->db->link, $status);
+        $query = "UPDATE products SET status = '$status' where id='$id'";
+        $result = $this->db->update($query);
+        if($result){
+			$_SESSION['alert']='Cập nhật thành công';
+		}else{
+			$_SESSION['error']='Đã xảy ra lỗi';
+		}    
+    }
 }
+?>

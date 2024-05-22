@@ -53,7 +53,7 @@ $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'], "/") + 
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white <?= $page == "post.php" ? 'active bg-gradient-primary' : ''; ?>" href="post.php">
+        <a class="nav-link text-white <?= $page == "category-blog.php" ? 'active bg-gradient-primary' : ''; ?>" href="category-blog.php">
           <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="material-icons opacity-10">dashboard</i>
           </div>

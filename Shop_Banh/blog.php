@@ -26,59 +26,49 @@ include 'inc/header.php';
                     <div class="search-form">
                         <h4>Search</h4>
                         <form action="#">
-                            <input type="text" placeholder="Search...">
+                            <input type="text" id="live_search" placeholder="Search...">
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </div>
                     <div class="blog-catagory">
-                        <h4>Categories</h4>
+                        <h4>Loại tin tức</h4>
+                        <?php 
+                        $cateblog=$category_blog->show_category_blog();
+                        if($cateblog){
+                            while($cateresult=$cateblog->fetch_assoc()){
+                                ?>
                         <ul>
-                            <li><a href="">Hoa_Shop</a></li>
-                            <li><a href="">Travel</a></li>
-                            <li><a href="">Picnic</a></li>
-                            <li><a href="">Model</a></li>
+                            <li><a href=""><?=$cateresult['title']?></a></li>
                         </ul>
+                                <?php
+                            }
+                        }
+                        ?>
+                    
                     </div>
                     <div class="recent-post">
-                        <h4>Recent Post</h4>
+                    <h4>Bài viết gần đây</h4>
+                    <?php 
+                        $show_blog=$blog->show_blog();
+                        if($show_blog){
+                            while($blogresult=$show_blog->fetch_assoc()){
+                                ?>
                         <div class="recent-blog">
                             <a href="#" class="rb-item">
                                 <div class="rb-pic">
-                                    <img src="img/blog/recent-1.jpg" alt="">
+                                <img src="uploads/<?=$blogresult['image']?>" alt="">
                                 </div>
                                 <div class="rb-text">
-                                    <h6>The đây là tiêu đề</h6>
-                                    <p>Mô tả <span>- May 19,2024</span> </p>
+                                <h6><?=substr($blogresult['title'],0,17)."..."?></h6>
+                                <p><?=substr($blogresult['description'],0,10)?><span><?=date('d/m/Y',strtotime($blogresult['created_at']))?></span> </p> 
                                 </div>
                             </a>
-                            <a href="#" class="rb-item">
-                                <div class="rb-pic">
-                                    <img src="img/blog/recent-1.jpg" alt="">
-                                </div>
-                                <div class="rb-text">
-                                    <h6>The đây là tiêu đề</h6>
-                                    <p>Mô tả <span>- May 19,2024</span> </p>
-                                </div>
-                            </a>
-                            <a href="#" class="rb-item">
-                                <div class="rb-pic">
-                                    <img src="img/blog/recent-1.jpg" alt="">
-                                </div>
-                                <div class="rb-text">
-                                    <h6>The đây là tiêu đề</h6>
-                                    <p>Mô tả <span>- May 19,2024</span> </p>
-                                </div>
-                            </a>
-                            <a href="#" class="rb-item">
-                                <div class="rb-pic">
-                                    <img src="img/blog/recent-1.jpg" alt="">
-                                </div>
-                                <div class="rb-text">
-                                    <h6>The đây là tiêu đề</h6>
-                                    <p>Mô tả <span>- May 19,2024</span> </p>
-                                </div>
-                            </a>
+
                         </div>
+                        <?php
+                            }
+                        }
+                        ?>
                     </div>
                     <div class="blog-tags">
                         <h4>Product Tags</h4>
@@ -96,101 +86,40 @@ include 'inc/header.php';
             </div>
             <div class="col-lg-9 order-1 order-lg-2">
                 <div class="row">
-                    <div class="col-lg-6 col-sm-6">
+                <?php 
+                        $show_blog=$blog->show_blog();
+                        if($show_blog){
+                            while($blogresult=$show_blog->fetch_assoc()){
+                                ?>
+                    <div class="col-lg-6 col-sm-6" id="search_result" >
                         <div class="blog-item">
                             <div class="bi-pic">
-                                <img src="img/blog//blog-1.jpg" alt="">
+                            <img src="uploads/<?=$blogresult['image']?>" alt="">
                             </div>
                             <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
+                                <a href="blog-details.php?idblog=<?=$blogresult['id']?>">
+                                    <h4><?=substr($blogresult['title'],0,32)."..."?></h4>
                                     <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
+                                        <p >
+                                        <?php 
+                                        $cateblog=$category_blog->show_category_blog();
+                                        if($cateblog){
+                                            while($cateresult=$cateblog->fetch_assoc()){
+                                        ?>    
+                                        <?=$blogresult['category_post_id']==$cateresult['id'] ? $cateresult['title'] : '' ?>
+                                        <?php }} ?>
+                                        
+                                        <span><?=date('d/m/Y',strtotime($blogresult['created_at']))?></span></p>
                                     </a>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="blog-item">
-                            <div class="bi-pic">
-                                <img src="img/blog//blog-2.jpg" alt="">
-                            </div>
-                            <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
-                                    <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
-                                    </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="blog-item">
-                            <div class="bi-pic">
-                                <img src="img/blog//blog-3.jpg" alt="">
-                            </div>
-                            <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
-                                    <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
-                                    </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="blog-item">
-                            <div class="bi-pic">
-                                <img src="img/blog//blog-4.jpg" alt="">
-                            </div>
-                            <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
-                                    <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
-                                    </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="blog-item">
-                            <div class="bi-pic">
-                                <img src="img/blog//blog-5.jpg" alt="">
-                            </div>
-                            <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
-                                    <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
-                                    </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-6">
-                        <div class="blog-item">
-                            <div class="bi-pic">
-                                <img src="img/blog//blog-6.jpg" alt="">
-                            </div>
-                            <div class="bi-text">
-                                <a href="blog-details.php">
-                                    <h4>The Personality Trait That Makes People Happiere</h4>
-                                    <a href="">
-                                        <p>travel<span>- May 19,2024</span></p>
-                                    </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="loading-more"><i class="icon_loading"></i><a href="">Loading More</a></div>
-
-                    </div>
-                </div>
+                    <?php
+                            }
+                        }
+                    ?>
+            </div>
             </div>
         </div>
     </div>

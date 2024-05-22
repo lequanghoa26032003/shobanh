@@ -1,11 +1,11 @@
 <?php
 include 'includes/header.php';
-include '../classes/post.php';
+include '../classes/category_blog.php';
 include '../classes/blog.php';
 
 ?>
 <?php
-$post = new post();
+$category_blog = new category_blog();
 $blog = new blog();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                                 <select class="form-control" name="category_post_id" id="" class="form-select">
                                     <option selected value="">------------------Chọn danh mục---------------</option>
                                     <?php
-                                    $list = $post->show_post();
+                                    $list = $category_blog->show_category_blog();
                                     if ($list && $list->num_rows > 0) {
                                         while ($result = $list->fetch_assoc()) {
 
@@ -49,19 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             </div>
                             <div class="col-md-6">
                                 <label for="name">Name</label>
-                                <input placeholder="Nhập tên sản phẩm" id="name" name="name" type="text"
+                                <input placeholder="Nhập ..." id="name" name="name" type="text"
                                     class="form-control">
                             </div>
 
 
                             <div class="col-md-12">
                                 <label for="des">description</label>
-                                <input placeholder="Nhập tên sản phẩm" id="des" name="description" type="text"
-                                    class="form-control">
+                                <textarea placeholder="Nhập ..." id="des" name="description" type="text"
+                                    class="form-control"></textarea>
                             </div>
                             <div class="col-md-12">
-                                <label for="des">Content</label>
-                                <textarea placeholder="Nhập tên sản phẩm" id="des" name="content" type="text"
+                                <label for="con">Content</label>
+                                <textarea placeholder="Nhập ..." id="con" name="content" type="text"
                                     class="form-control"></textarea>
                             </div>
 
